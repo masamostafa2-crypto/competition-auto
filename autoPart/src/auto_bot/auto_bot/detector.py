@@ -29,7 +29,7 @@ class YoloDetector(Node):
 
     def process_image(self, msg):
         # Convert the incoming ROS Image message to an OpenCV BGR frame
-        cv_image = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
+        cv_image = self.bridge.imgmsg_to_cv2(msg, 'mono8')
 
         # Run YOLO on the frame to detect objects
         results = self.model(cv_image, verbose=False)
@@ -38,7 +38,7 @@ class YoloDetector(Node):
         annotated = results[0].plot()
 
         # Convert the annotated OpenCV image back into a ROS Image message
-        msg_out = self.bridge.cv2_to_imgmsg(annotated, 'bgr8')
+        msg_out = self.bridge.cv2_to_imgmsg(annotated, 'mono8')
 
         # Publish the annotated image to the /yolo/visualization topic
         self.viz_pub.publish(msg_out)
@@ -47,7 +47,7 @@ class YoloDetector(Node):
 def main(args=None):
     # Initialize ROS 2 and create the node
     rclpy.init(args=args)
-    node = YoloDetectorViz()
+    node = YoloDetector()
 
     # Keep the node alive so it can keep processing incoming frames
     rclpy.spin(node)

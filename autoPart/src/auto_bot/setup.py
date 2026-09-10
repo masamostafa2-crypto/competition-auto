@@ -24,7 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            detect
+          'detector = auto_bot.detector:main'
+          'visual=auto_bot.visual:main'
         ],
     },
 )
