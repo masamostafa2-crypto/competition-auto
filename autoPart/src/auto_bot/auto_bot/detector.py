@@ -22,10 +22,10 @@ class YoloDetector(Node):
         )
 
         # Publisher for the annotated (YOLO-processed) images
-        self.viz_pub = self.create_publisher(Image, '/yolo/visualization', 10)
+        self.viz_pub = self.create_publisher(Image, '/yolo/visual', 10)
 
         # Let the terminal know that the node has started successfully
-        self.get_logger().info("YOLO detector with visualization started")
+        self.get_logger().info("YOLO visualizer started")
 
     def process_image(self, msg):
         # Convert the incoming ROS Image message to an OpenCV BGR frame
