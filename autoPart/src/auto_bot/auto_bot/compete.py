@@ -9,6 +9,8 @@ from cv_bridge import CvBridge
 from ultralytics import YOLO
 from enum import  Enum
 
+from manual_controller import ManualController
+
 scanning_angle = 10.0
 scanning_duration = 1.0
 rotated_angle = 0
@@ -57,10 +59,11 @@ class Compete(Node):
         self.bridge = CvBridge()
         self.model = YOLO("yolov8n.pt")
         self.target_class = "suitcase"  # set to your real target class
-        self.real_class = "real_box"
-        self.fake_class = "fake_box"
+        self.real_class = "real"
+        self.fake_class = "fake"
         self.create_subscription(Image, '/mono/image', self.image_cb, 10)
         self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        self.vis_pub = self.create_publisher(Image, '/compete/detections', 10)
 
     def ultra_cb(self, msg):
         self.ultra_seen = True
@@ -81,6 +84,13 @@ class Compete(Node):
                 containes_real = True
             if name == self.fake_class and conf > 0.6:
                 containes_fake = True
+
+        # Publish an annotated frame so detections can be viewed with:
+        #   rqt_image_view /compete/detections
+        annotated = results[0].plot()
+        vis_msg = self.bridge.cv2_to_imgmsg(annotated, encoding='bgr8')
+        vis_msg.header = msg.header
+        self.vis_pub.publish(vis_msg)
 
     def wait_until(self, check_fn, timeout):
         """Spin the node while waiting for check_fn() to become True."""
@@ -321,7 +331,15 @@ class Compete(Node):
         
         if current_state == Status.real_fake :
             #manual code switching
-            pass
+            self.get_logger().info('Both boxes found -- stopping autonomous mode and switching to manual control.')
+            self.cmd_vel_pub.publish(Twist())  # make sure the robot is stopped before handing over
+            manual_node = ManualController()
+            try:
+                rclpy.spin(manual_node)
+            except KeyboardInterrupt:
+                pass
+            finally:
+                manual_node.destroy_node()
 
         self.get_logger().info('Competition complete.')
         return True
