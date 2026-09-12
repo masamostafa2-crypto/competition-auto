@@ -2,14 +2,14 @@ import time
 import math
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32
+from std_msgs.msg import Int32
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
 from cv_bridge import CvBridge
 from ultralytics import YOLO
 from enum import  Enum
 
-from manual_controller import ManualController
+from auto_bot.manual import ManualController
 
 scanning_angle = 10.0
 scanning_duration = 1.0
@@ -55,7 +55,7 @@ class Compete(Node):
         self.start_time = None
         self.box_seen = False
         self.d = None
-        self.create_subscription(Float32, '/ultrasonic_distance', self.ultra_cb, 10)
+        self.create_subscription(Int32, '/ultrasonic_distance', self.ultra_cb, 10)
         self.bridge = CvBridge()
         self.model = YOLO("yolov8n.pt")
         self.target_class = "suitcase"  # set to your real target class
@@ -216,7 +216,7 @@ class Compete(Node):
 
         # moving forward 
         if current_state == Status.fake_only or current_state == Status.real_only :
-            if d >= 10.0 :
+            if d >= 10:
               if self.start_time is None:
                 self.start_time = time.time()
                 self.get_logger().info(f"Moving forward for {moving_forward_duration} second...")
@@ -296,7 +296,7 @@ class Compete(Node):
 
 
         if current_state == Status.move_forward_2 :
-            if d >= 10.0 :
+            if d >= 10:
                 if self.start_time is None:
                  self.start_time = time.time()
                  self.get_logger().info(f"Moving forward for {moving_forward_duration} second...")
