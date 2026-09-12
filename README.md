@@ -1,6 +1,8 @@
 #README
 ## To view the image , run this in the terminal :
-``` rqt_image_view /yolo/visualization ```
+``` 
+rqt_image_view /yolo/visualization
+```
 ##to check the manual controller alone : 
 ``` 
 source ~/"competition auto "/competition_auto/autoPart/install/setup.bash ```
