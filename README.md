@@ -25,4 +25,5 @@ ros2 launch competetion_bringup bringup.launch.py
 ## check the ultrasonic topic : 
 ```
   ros2 topic echo /ultrasonic_distance
+
 ```
