@@ -18,6 +18,7 @@ ros2 launch auto_bot compete_launch.py
 ```
 ## launch the bring up : 
 ```
+source install/setup.bash
 ros2 launch competetion_bringup bringup.launch.py
 ```
 ## check the ultrasonic topic : 
