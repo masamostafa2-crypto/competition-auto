@@ -3,7 +3,7 @@
 ``` 
 rqt_image_view /yolo/visualization
 ```
-##to check the manual controller alone : 
+## To check the manual controller alone : 
 ``` 
 source ~/"competition auto "/competition_auto/autoPart/install/setup.bash ```
 ros2 run auto_bot manual
