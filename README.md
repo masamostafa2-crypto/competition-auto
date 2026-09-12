@@ -8,7 +8,7 @@ rqt_image_view /yolo/visualization
 source ~/"competition auto "/competition_auto/autoPart/install/setup.bash ```
 ros2 run auto_bot manual
 ```
-## launch the 2 scripts :
+## launch the compete and manual scripts :
 ```
 cd ~/"competition auto "/competition_auto/autoPart
 rm -rf build/ install/ log/
